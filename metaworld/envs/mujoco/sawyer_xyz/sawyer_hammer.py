@@ -130,10 +130,7 @@ class SawyerHammerEnv(SawyerXYZEnv):
         obs_dict = self._get_obs_dict()
         reward , reachRew, reachDist, pickRew, hammerRew , hammerDist, screwDist = self.compute_reward(action, obs_dict, mode = self.rewMode)
         self.curr_path_length +=1
-        if self.curr_path_length == self.max_path_length:
-            done = True
-        else:
-            done = False
+        done = self._get_done_signal()
         # return ob, reward, done, { 'reachRew':reachRew, 'reachDist': reachDist, 'pickRew':pickRew,
         #                             'hammerRew': hammerRew, 'epRew' : reward, 'hammerDist': hammerDist, 'screwDist': screwDist}
         info = {'reachDist': reachDist, 'pickRew':pickRew, 'epRew' : reward, 'goalDist': screwDist, 'success': float(screwDist <= 0.05)}

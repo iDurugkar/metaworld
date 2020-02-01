@@ -134,10 +134,7 @@ class SawyerWindowCloseEnv(SawyerXYZEnv):
         reward, reachDist, pickrew, pullDist = self.compute_reward(action, obs_dict, mode = self.rewMode)
         self.curr_path_length +=1
         #info = self._get_info()
-        if self.curr_path_length == self.max_path_length:
-            done = True
-        else:
-            done = False
+        done = self._get_done_signal()
         info = {'reachDist': reachDist, 'goalDist': pullDist, 'epRew' : reward, 'pickRew':pickrew, 'success': float(pullDist <= 0.05)}
         info['goal'] = self.goal
         return ob, reward, done, info

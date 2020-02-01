@@ -75,6 +75,7 @@ class SawyerXYZEnv(SawyerMocapBase, metaclass=abc.ABCMeta):
             mocap_high=None,
             action_scale=2./100,
             action_rot_scale=1.,
+            version='v2',
             **kwargs
     ):
         super().__init__(*args, **kwargs)
@@ -82,6 +83,7 @@ class SawyerXYZEnv(SawyerMocapBase, metaclass=abc.ABCMeta):
         self.action_rot_scale = action_rot_scale
         self.hand_low = np.array(hand_low)
         self.hand_high = np.array(hand_high)
+        self.version = version
         if mocap_low is None:
             mocap_low = hand_low
         if mocap_high is None:
@@ -185,18 +187,27 @@ class SawyerXYZEnv(SawyerMocapBase, metaclass=abc.ABCMeta):
             self._state_goal_idx[goal] = 1.
         else:
             self.goal = goal
-    
+
     def set_init_config(self, config):
         assert isinstance(config, dict)
         for key, val in config.items():
             self.init_config[key] = val
+
+    def _get_done_signal(self):
+        if self.version == 'v1':
+            if self.curr_path_length == self.max_path_length:
+                return True
+            else:
+                return False
+        else:
+            return False
 
     '''
     Functions that are copied and pasted everywhere and seems
     to be not used.
     '''
     def sample_goals(self, batch_size):
-        '''Note: should be replaced by sample_goals_ if not used''' 
+        '''Note: should be replaced by sample_goals_ if not used'''
         # Required by HER-TD3
         goals = self.sample_goals_(batch_size)
         if self.discrete_goal_space is not None:

@@ -146,10 +146,7 @@ class SawyerStickPushEnv(SawyerXYZEnv):
         obs_dict = self._get_obs_dict()
         reward , reachRew, reachDist, pickRew, pushRew , pushDist = self.compute_reward(action, obs_dict, mode = self.rewMode)
         self.curr_path_length +=1
-        if self.curr_path_length == self.max_path_length:
-            done = True
-        else:
-            done = False
+        done = self._get_done_signal()
         info = {'reachDist': reachDist, 'pickRew':pickRew, 'epRew' : reward, 'goalDist': pushDist, 'success': float(pushDist <= 0.1 and reachDist <= 0.05)}
         info['goal'] = self.goal
         return ob, reward, done, info

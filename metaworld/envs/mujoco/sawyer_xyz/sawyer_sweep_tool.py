@@ -149,10 +149,7 @@ class SawyerSweepToolEnv(SawyerXYZEnv):
         reward, reachRew, reachDist, pickRew, pushRew, pushDist, ballDist = self.compute_reward(action, ob, mode=self.rewMode)
         self.curr_path_length +=1
         #info = self._get_info()
-        if self.curr_path_length == self.max_path_length:
-            done = True
-        else:
-            done = False
+        done = self._get_done_signal()
         info = {'reachDist': reachDist, 'goalDist': pushDist, 'epRew' : reward, 'pickRew':pickRew}
         info['goal'] = self.goal
         return ob, reward, done, info
